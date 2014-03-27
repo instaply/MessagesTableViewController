@@ -117,6 +117,9 @@
  */
 - (NSString *)customCellIdentifierForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)didTapRecipient;
+- (void)didAskToRemoveRecipient;
+
 @end
 
 
@@ -176,6 +179,8 @@
  *  The name of the user sending messages. The default value is `nil`.
  */
 @property (copy, nonatomic) NSString *sender;
+
+@property (copy, nonatomic) NSString *recipient;
 
 #pragma mark - Messages view controller
 

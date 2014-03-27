@@ -14,6 +14,12 @@
 
 #import <UIKit/UIKit.h>
 #import "JSMessageTextView.h"
+#import "JSRecipientView.h"
+
+#define RECIPIENT_VIEW_HEIGHT 36
+
+@class JSRecipientView;
+@class JSMessageInputView;
 
 /**
  *  The appearance style of the input bar view for composing a new message.
@@ -30,16 +36,25 @@ typedef NS_ENUM(NSUInteger, JSMessageInputViewStyle) {
 };
 
 
+@protocol JSMessageInputViewDelegate <NSObject>
+- (void)messageInputViewDidTapRecipientName:(JSMessageInputView*)messageInputView;
+- (void)messageInputViewDidTapRecipientRemove:(JSMessageInputView *)messageInputView;
+@end
+
 /**
  *  An instance of `JSMessageInputView` defines the input toolbar for composing a new message that is to be displayed above the keyboard.
  */
-@interface JSMessageInputView : UIImageView
+@interface JSMessageInputView : UIImageView <JSRecipientViewDelegate>
+
+@property (weak, nonatomic) id<JSMessageInputViewDelegate> delegate;
 
 /**
  *  Returns the style appearance for the input view.
  *  @see JSMessageInputViewStyle.
  */
 @property (assign, nonatomic, readonly) JSMessageInputViewStyle style;
+
+@property (strong, nonatomic) JSRecipientView *recipientView;
 
 /**
  *  Returns the textView into which a new message is composed. This property is never `nil`.
@@ -51,6 +66,8 @@ typedef NS_ENUM(NSUInteger, JSMessageInputViewStyle) {
  *  @see JSMessageInputViewStyle.
  */
 @property (weak, nonatomic) UIButton *sendButton;
+
+@property (strong, nonatomic) NSString *recipient;
 
 #pragma mark - Initialization
 

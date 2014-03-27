@@ -73,8 +73,13 @@
 - (void)buttonPressed:(UIBarButtonItem *)sender
 {
     // Testing pushing/popping messages view
-    JSDemoViewController *vc = [[JSDemoViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    /*JSDemoViewController *vc = [[JSDemoViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];*/
+    if(self.recipient){
+        self.recipient = nil;
+    } else {
+        self.recipient = @"John Doe";
+    }
 }
 
 #pragma mark - Table view data source
@@ -200,5 +205,14 @@
     UIImage *image = [self.avatars objectForKey:sender];
     return [[UIImageView alloc] initWithImage:image];
 }
+
+- (void)didTapRecipient {
+    NSLog(@"Recipient should change!");
+}
+
+- (void)didAskToRemoveRecipient {
+    self.recipient = nil;
+}
+
 
 @end
