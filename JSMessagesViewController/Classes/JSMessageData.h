@@ -14,6 +14,14 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol JSAttachmentData <NSObject>
+
+- (NSString*)name;
+- (NSString*)contentType;
+- (NSUInteger)contentLength;
+
+@end
+
 /**
  *  The `JSMessageData` protocol defines the common interface through which `JSMessagesViewController` interacts with message model objects. 
  *  It declares the methods that a class must implement so that instances of that class can be displayed properly by a `JSMessagesViewController`.
@@ -39,5 +47,7 @@
  *  @return The date that the message was sent.
  */
 - (NSDate *)date;
+
+- (id<JSAttachmentData>)attachment;
 
 @end

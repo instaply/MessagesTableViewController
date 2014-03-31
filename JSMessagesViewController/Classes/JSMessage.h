@@ -15,6 +15,14 @@
 #import <Foundation/Foundation.h>
 #import "JSMessageData.h"
 
+@interface JSAttachment : NSObject <JSAttachmentData, NSCoding, NSCopying>
+@property (copy, nonatomic) NSString *name;
+@property (copy, nonatomic) NSString *contentType;
+@property (assign, nonatomic) NSUInteger contentLength;
+
+- (id)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength;
+@end
+
 /**
  *  A `JSMessage` object represents a single user message. This is a concrete class that implements the `JSMessageData` protocol. It contains the message text, its sender, and the date that the message was sent.
  */
@@ -35,6 +43,8 @@
  */
 @property (strong, nonatomic) NSDate *date;
 
+@property (strong, nonatomic) id<JSAttachmentData> attachment;
+
 #pragma mark - Initialization
 
 /**
@@ -49,5 +59,10 @@
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
                         date:(NSDate *)date;
+
+- (instancetype)initWithText:(NSString *)text
+                      sender:(NSString *)sender
+                        date:(NSDate *)date
+                  attachment:(JSAttachment *)attachment;
 
 @end

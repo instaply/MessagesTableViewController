@@ -44,6 +44,8 @@
                      [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleCook date:[NSDate distantPast]],
                      [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleJobs date:[NSDate date]],
                      [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleWoz date:[NSDate date]],
+                     [[JSMessage alloc] initWithText:@"Attachment test from Jobs." sender:kSubtitleJobs date:[NSDate date] attachment:[[JSAttachment alloc] initWithName:@"test1.pdf" contentType:@"application/pdf" contentLength:100000000]],
+                     [[JSMessage alloc] initWithText:@"Attachment test from Woz." sender:kSubtitleWoz date:[NSDate date] attachment:[[JSAttachment alloc] initWithName:@"test2.pdf" contentType:@"application/pdf" contentLength:100000000]],
                      nil];
     
     

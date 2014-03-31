@@ -14,6 +14,41 @@
 
 #import "JSMessage.h"
 
+@implementation JSAttachment
+
+- (instancetype)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength {
+    if((self = [super init])){
+        _name = name;
+        _contentType = contentType;
+        _contentLength = contentLength;
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.name forKey:@"name"];
+    [aCoder encodeObject:self.contentType forKey:@"contentType"];
+    [aCoder encodeInteger:self.contentLength forKey:@"contentLength"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        _name = [aDecoder decodeObjectForKey:@"name"];
+        _contentType = [aDecoder decodeObjectForKey:@"contentType"];
+        _contentLength = (NSUInteger) [aDecoder decodeIntegerForKey:@"contentLength"];
+    }
+    return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [[[self class] allocWithZone:zone] initWithName:[self.name copy] contentType:[self.contentType copy] contentLength:self.contentLength];
+}
+
+
+@end
+
 @implementation JSMessage
 
 #pragma mark - Initialization
@@ -27,6 +62,21 @@
         _text = text ? text : @" ";
         _sender = sender;
         _date = date;
+    }
+    return self;
+}
+
+- (instancetype)initWithText:(NSString *)text
+                      sender:(NSString *)sender
+                        date:(NSDate *)date
+                  attachment:(JSAttachment *)attachment
+{
+    self = [super init];
+    if (self) {
+        _text = text ? text : @" ";
+        _sender = sender;
+        _date = date;
+        _attachment = attachment;
     }
     return self;
 }
@@ -47,6 +97,7 @@
         _text = [aDecoder decodeObjectForKey:@"text"];
         _sender = [aDecoder decodeObjectForKey:@"sender"];
         _date = [aDecoder decodeObjectForKey:@"date"];
+        _attachment = [aDecoder decodeObjectForKey:@"attachment"];
     }
     return self;
 }
@@ -56,6 +107,7 @@
     [aCoder encodeObject:self.text forKey:@"text"];
     [aCoder encodeObject:self.sender forKey:@"sender"];
     [aCoder encodeObject:self.date forKey:@"date"];
+    [aCoder encodeObject:self.attachment forKey:@"attachment"];
 }
 
 #pragma mark - NSCopying
@@ -64,7 +116,8 @@
 {
     return [[[self class] allocWithZone:zone] initWithText:[self.text copy]
                                                     sender:[self.sender copy]
-                                                      date:[self.date copy]];
+                                                      date:[self.date copy]
+                                                attachment:[(JSAttachment *)self.attachment copy]];
 }
 
 @end
