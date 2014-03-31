@@ -19,6 +19,7 @@
 - (NSString*)name;
 - (NSString*)contentType;
 - (NSUInteger)contentLength;
+- (NSString*)url;
 
 @end
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name				= 'JSMessagesViewController'
-	s.version			= '4.0.5'
+	s.version			= '4.0.6'
 	s.summary			= 'A messages UI for iPhone and iPad. Customized for Instaply'
 	s.homepage			= 'https://github.com/instaply/MessagesTableViewController'
 	s.social_media_url	= 'https://twitter.com/instaply'

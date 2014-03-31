@@ -19,8 +19,9 @@
 @property (copy, nonatomic) NSString *name;
 @property (copy, nonatomic) NSString *contentType;
 @property (assign, nonatomic) NSUInteger contentLength;
+@property (copy, nonatomic) NSString *url;
 
-- (id)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength;
+- (id)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength url:(NSString*)url;
 @end
 
 /**

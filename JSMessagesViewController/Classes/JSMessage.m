@@ -16,11 +16,12 @@
 
 @implementation JSAttachment
 
-- (instancetype)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength {
+- (instancetype)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength url:(NSString*)url {
     if((self = [super init])){
         _name = name;
         _contentType = contentType;
         _contentLength = contentLength;
+        _url = url;
     }
 
     return self;
@@ -30,6 +31,7 @@
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeObject:self.contentType forKey:@"contentType"];
     [aCoder encodeInteger:self.contentLength forKey:@"contentLength"];
+    [aCoder encodeObject:self.url forKey:@"url"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -38,12 +40,13 @@
         _name = [aDecoder decodeObjectForKey:@"name"];
         _contentType = [aDecoder decodeObjectForKey:@"contentType"];
         _contentLength = (NSUInteger) [aDecoder decodeIntegerForKey:@"contentLength"];
+        _url = [aDecoder decodeObjectForKey:@"url"];
     }
     return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    return [[[self class] allocWithZone:zone] initWithName:[self.name copy] contentType:[self.contentType copy] contentLength:self.contentLength];
+    return [[[self class] allocWithZone:zone] initWithName:[self.name copy] contentType:[self.contentType copy] contentLength:self.contentLength url:[self.url copy]];
 }
 
 
