@@ -49,6 +49,10 @@
     return [[[self class] allocWithZone:zone] initWithName:[self.name copy] contentType:[self.contentType copy] contentLength:self.contentLength url:[self.url copy]];
 }
 
+- (BOOL)isImage {
+    return [self.contentType hasPrefix:@"image/"];
+}
+
 
 @end
 

@@ -20,6 +20,7 @@
 - (NSString*)contentType;
 - (NSUInteger)contentLength;
 - (NSString*)url;
+- (BOOL)isImage;
 
 @end
 
