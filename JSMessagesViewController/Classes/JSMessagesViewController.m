@@ -220,6 +220,7 @@
 }
 
 - (void)removeAttachment {
+    [self.messageInputView.attachmentUploadIndicator stopAnimating];
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
     self.messageInputView.attachmentButton.hidden = NO;

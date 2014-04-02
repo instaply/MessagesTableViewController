@@ -121,7 +121,6 @@
 - (void)didAskToRemoveRecipient;
 - (void)didAskToAddAttachment;
 - (void)didRemoveAttachment;
-- (void)removeAttachment;
 @end
 
 
@@ -193,6 +192,7 @@
 - (void)finishSend;
 
 - (void)addAttachment:(UIImage*)attachmentThumbnail;
+- (void)removeAttachment;
 
 
 /**
