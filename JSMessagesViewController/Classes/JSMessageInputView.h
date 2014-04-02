@@ -68,6 +68,10 @@ typedef NS_ENUM(NSUInteger, JSMessageInputViewStyle) {
 @property (weak, nonatomic) UIButton *sendButton;
 
 @property (strong, nonatomic) NSString *recipient;
+@property (weak, nonatomic) UIButton *attachmentButton;
+@property (weak, nonatomic) UIActivityIndicatorView *attachmentUploadIndicator;
+@property (weak, nonatomic) UIImageView *attachmentThumbnail;
+@property (weak, nonatomic) UIButton *removeAttachmentButton;
 
 #pragma mark - Initialization
 

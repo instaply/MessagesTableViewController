@@ -51,6 +51,12 @@
                   borderWidth:(CGFloat)borderWidth
                  shadowOffSet:(CGSize)shadowOffset;
 
+- (UIImage *)js_imageAsRoundedSquare:(BOOL)clipToCircle
+                  withSideLength:(CGFloat)diameter
+                  borderColor:(UIColor *)borderColor
+                  borderWidth:(CGFloat)borderWidth
+                 shadowOffSet:(CGSize)shadowOffset;
+
 /**
  *  Creates and returns a new image object that is masked with the specified mask color.
  *

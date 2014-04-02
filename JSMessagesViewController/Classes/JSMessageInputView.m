@@ -19,10 +19,23 @@
 #import "NSString+JSMessagesView.h"
 #import "UIColor+JSMessagesView.h"
 #import "JSRecipientView.h"
+#import "UIImage+JSMessagesView.h"
+
+#define kAttachmentButtonWidth 40.0f
+#define kRemoveAttachmentButtonOffsetX 4.0f
+#define kRemoveAttachmentButtonOffsetY 2.0f
 
 @interface JSMessageInputView ()
 
 - (void)setup;
+
+- (void)configureAttachmentButton;
+
+- (void)configureAttachmentUploadIndicator;
+
+- (void)configureAttachmentThumbnail;
+
+- (void)configureRemoveAttachmentButton;
 
 - (void)configureRecipientBarWithStyle:(JSMessageInputViewStyle)style;
 
@@ -55,8 +68,9 @@
 
 - (void)configureInputBarWithStyle:(JSMessageInputViewStyle)style {
     CGFloat sendButtonWidth = (style == JSMessageInputViewStyleClassic) ? 78.0f : 64.0f;
+    CGFloat attachmentButtonWidth = kAttachmentButtonWidth;
 
-    CGFloat width = self.frame.size.width - sendButtonWidth;
+    CGFloat width = self.frame.size.width - sendButtonWidth - attachmentButtonWidth;
     CGFloat height = [JSMessageInputView textViewLineHeight];
 
     JSMessageTextView *textView = [[JSMessageTextView alloc] initWithFrame:CGRectZero];
@@ -64,7 +78,7 @@
     _textView = textView;
 
     if (style == JSMessageInputViewStyleClassic) {
-        _textView.frame = CGRectMake(6.0f, RECIPIENT_VIEW_HEIGHT + 3.0f, width, height);
+        _textView.frame = CGRectMake(6.0f + attachmentButtonWidth, RECIPIENT_VIEW_HEIGHT + 3.0f, width, height);
         _textView.backgroundColor = [UIColor whiteColor];
 
         self.image = [[UIImage imageNamed:@"input-bar-background"] resizableImageWithCapInsets:UIEdgeInsetsMake(19.0f, 3.0f, 19.0f, 3.0f)
@@ -80,7 +94,7 @@
         [self addSubview:inputFieldBack];
     }
     else {
-        _textView.frame = CGRectMake(4.0f, RECIPIENT_VIEW_HEIGHT + 4.5f, width, height);
+        _textView.frame = CGRectMake(4.0f + attachmentButtonWidth, RECIPIENT_VIEW_HEIGHT + 4.5f, width, height);
         _textView.backgroundColor = [UIColor clearColor];
         _textView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
         _textView.layer.borderWidth = 0.65f;
@@ -89,6 +103,35 @@
         self.image = [[UIImage imageNamed:@"input-bar-flat"] resizableImageWithCapInsets:UIEdgeInsetsMake(2.0f, 0.0f, 0.0f, 0.0f)
                                                                             resizingMode:UIImageResizingModeStretch];
     }
+}
+
+- (void)configureAttachmentButton {
+    UIButton *attachmentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *attachmentIcon = [UIImage imageNamed:@"button-photo"];
+    [attachmentButton setImage:attachmentIcon forState:UIControlStateNormal];
+    [attachmentButton setImage:[attachmentIcon js_imageMaskWithColor:[UIColor darkGrayColor]] forState:UIControlStateHighlighted];
+    self.attachmentButton = attachmentButton;
+}
+
+- (void)configureAttachmentUploadIndicator {
+    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicatorView.hidesWhenStopped = YES;
+    self.attachmentUploadIndicator = activityIndicatorView;
+}
+
+- (void)configureAttachmentThumbnail {
+    UIImageView *attachmentThumbnail = [[UIImageView alloc] init];
+    attachmentThumbnail.contentMode = UIViewContentModeScaleAspectFill;
+    attachmentThumbnail.clipsToBounds = YES;
+    self.attachmentThumbnail = attachmentThumbnail;
+}
+
+- (void)configureRemoveAttachmentButton {
+    UIButton *removeAttachmentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [removeAttachmentButton setImage:[[UIImage imageNamed:@"button-remove-attachment.png"] js_imageAsCircle:YES withDiamter:16.0 borderColor:nil borderWidth:0.0 shadowOffSet:CGSizeZero] forState:UIControlStateNormal];
+    [removeAttachmentButton setImage:[[UIImage imageNamed:@"button-remove-attachment-pressed.png"] js_imageAsCircle:YES withDiamter:16.0 borderColor:nil borderWidth:0.0 shadowOffSet:CGSizeZero] forState:UIControlStateHighlighted];
+    removeAttachmentButton.hidden = YES;
+    self.removeAttachmentButton = removeAttachmentButton;
 }
 
 - (void)configureSendButtonWithStyle:(JSMessageInputViewStyle)style {
@@ -147,6 +190,10 @@
         [self configureRecipientBarWithStyle:style];
         [self configureInputBarWithStyle:style];
         [self configureSendButtonWithStyle:style];
+        [self configureAttachmentButton];
+        [self configureAttachmentUploadIndicator];
+        [self configureAttachmentThumbnail];
+        [self configureRemoveAttachmentButton];
 
         _textView.delegate = delegate;
         _textView.keyboardDelegate = delegate;
@@ -188,10 +235,81 @@
     _sendButton = btn;
 }
 
+- (void)setAttachmentButton:(UIButton *)btn {
+    if (_attachmentButton) {
+        [_attachmentButton removeFromSuperview];
+    }
+
+    if (self.style == JSMessageInputViewStyleClassic) {
+        btn.frame = CGRectMake(6.0f, 8.0f, kAttachmentButtonWidth, 26.0f + RECIPIENT_VIEW_HEIGHT);
+    }
+    else {
+        CGFloat padding = 8.0f;
+        btn.frame = CGRectMake(4.0f,
+                padding + RECIPIENT_VIEW_HEIGHT,
+                kAttachmentButtonWidth,
+                self.textView.frame.size.height - padding);
+    }
+
+    [self addSubview:btn];
+    _attachmentButton = btn;
+}
+
+- (void)setAttachmentUploadIndicator:(UIActivityIndicatorView *)attachmentUploadIndicator {
+    if (_attachmentUploadIndicator) {
+        [_attachmentUploadIndicator removeFromSuperview];
+    }
+
+    if (self.style == JSMessageInputViewStyleClassic) {
+        attachmentUploadIndicator.frame = CGRectMake(6.0f, 8.0f, kAttachmentButtonWidth, 26.0f + RECIPIENT_VIEW_HEIGHT);
+    }
+    else {
+        CGFloat padding = 8.0f;
+        attachmentUploadIndicator.frame = CGRectMake(4.0f,
+                padding + RECIPIENT_VIEW_HEIGHT,
+                kAttachmentButtonWidth,
+                self.textView.frame.size.height - padding);
+    }
+
+    [self addSubview:attachmentUploadIndicator];
+    _attachmentUploadIndicator = attachmentUploadIndicator;
+}
+
+- (void)setRemoveAttachmentButton:(UIButton *)btn {
+    if (_removeAttachmentButton) {
+        [_removeAttachmentButton removeFromSuperview];
+    }
+
+    btn.frame = CGRectMake(self.attachmentThumbnail.frame.origin.x - kRemoveAttachmentButtonOffsetX, self.attachmentThumbnail.frame.origin.y - kRemoveAttachmentButtonOffsetY, 16, 16);
+
+    [self addSubview:btn];
+    _removeAttachmentButton = btn;
+}
+
+- (void)setAttachmentThumbnail:(UIImageView *)attachmentThumbnail {
+    if (_attachmentThumbnail) {
+        [_attachmentThumbnail removeFromSuperview];
+    }
+
+    if (self.style == JSMessageInputViewStyleClassic) {
+        attachmentThumbnail.frame = CGRectMake(6.0f, 8.0f, kAttachmentButtonWidth, 26.0f + RECIPIENT_VIEW_HEIGHT);
+    }
+    else {
+        CGFloat padding = 8.0f;
+        attachmentThumbnail.frame = CGRectMake(4.0f,
+                padding + RECIPIENT_VIEW_HEIGHT,
+                kAttachmentButtonWidth,
+                self.textView.frame.size.height - padding);
+    }
+
+    [self addSubview:attachmentThumbnail];
+    _attachmentThumbnail = attachmentThumbnail;
+}
+
 - (void)setRecipient:(NSString *)recipient {
-    if(recipient != nil && _recipient == nil){
+    if (recipient != nil && _recipient == nil) {
         [self addSubview:_recipientView];
-    } else if(recipient == nil && _recipient != nil){
+    } else if (recipient == nil && _recipient != nil) {
         [_recipientView removeFromSuperview];
     }
     _recipient = recipient;
@@ -203,37 +321,50 @@
     [super layoutSubviews];
 
     CGFloat sendButtonWidth = (self.style == JSMessageInputViewStyleClassic) ? 78.0f : 64.0f;
+    CGFloat attachmentButtonWidth = kAttachmentButtonWidth;
 
-    CGFloat width = self.frame.size.width - sendButtonWidth;
+    CGFloat width = self.frame.size.width - sendButtonWidth - attachmentButtonWidth;
     CGFloat height = _textView.frame.size.height;
     if (self.recipient) {
         _recipientView.frame = CGRectMake(0, 0, self.frame.size.width, RECIPIENT_VIEW_HEIGHT);
         if (self.style == JSMessageInputViewStyleClassic) {
-            _textView.frame = CGRectMake(6.0f, RECIPIENT_VIEW_HEIGHT + 3.0f, width, height);
+            _textView.frame = CGRectMake(6.0f + attachmentButtonWidth, RECIPIENT_VIEW_HEIGHT + 3.0f, width, height);
             _sendButton.frame = CGRectMake(self.frame.size.width - 65.0f, 8.0f, 59.0f, 26.0f + RECIPIENT_VIEW_HEIGHT);
+            _attachmentButton.frame = CGRectMake(6.0f, RECIPIENT_VIEW_HEIGHT + 3.0f, kAttachmentButtonWidth, height);
         } else {
-            _textView.frame = CGRectMake(4.0f, RECIPIENT_VIEW_HEIGHT + 4.5f, width, height);
+            _textView.frame = CGRectMake(4.0f + attachmentButtonWidth, RECIPIENT_VIEW_HEIGHT + 4.5f, width, height);
             CGFloat padding = 8.0f;
             _sendButton.frame = CGRectMake(self.textView.frame.origin.x + self.textView.frame.size.width,
                     padding + RECIPIENT_VIEW_HEIGHT,
                     60.0f,
                     self.textView.frame.size.height - padding);
+            _attachmentButton.frame = CGRectMake(4.0f, RECIPIENT_VIEW_HEIGHT + 4.5f, kAttachmentButtonWidth, height);
         }
 
     } else {
         _recipientView.frame = CGRectZero;
         if (self.style == JSMessageInputViewStyleClassic) {
-            _textView.frame = CGRectMake(6.0f, 3.0f, width, height);
+            _textView.frame = CGRectMake(6.0f + attachmentButtonWidth, 3.0f, width, height);
             _sendButton.frame = CGRectMake(self.frame.size.width - 65.0f, 8.0f, 59.0f, 26.0f);
+            _attachmentButton.frame = CGRectMake(6.0f, 3.0f, kAttachmentButtonWidth, height);
         } else {
-            _textView.frame = CGRectMake(4.0f, 4.5f, width, height);
+            _textView.frame = CGRectMake(4.0f + attachmentButtonWidth, 4.5f, width, height);
             CGFloat padding = 8.0f;
             _sendButton.frame = CGRectMake(self.textView.frame.origin.x + self.textView.frame.size.width,
                     padding,
                     60.0f,
                     self.textView.frame.size.height - padding);
+            _attachmentButton.frame = CGRectMake(4.0f, 4.5f, kAttachmentButtonWidth, height);
         }
     }
+    _attachmentUploadIndicator.frame = _attachmentButton.frame;
+    _attachmentThumbnail.frame = CGRectMake(
+            _attachmentButton.frame.origin.x,
+            _attachmentButton.frame.origin.y - ((kAttachmentButtonWidth - _attachmentButton.frame.size.height) / 2),
+            _attachmentButton.frame.size.width,
+            kAttachmentButtonWidth
+    );
+    _removeAttachmentButton.frame = CGRectMake(self.attachmentThumbnail.frame.origin.x - kRemoveAttachmentButtonOffsetX, self.attachmentThumbnail.frame.origin.y - kRemoveAttachmentButtonOffsetY, 16, 16);
 }
 
 

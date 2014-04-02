@@ -15,6 +15,7 @@
 #import "JSMessagesViewController.h"
 #import "JSMessageTextView.h"
 #import "NSString+JSMessagesView.h"
+#import "UIImage+JSMessagesView.h"
 
 @interface JSMessagesViewController () <JSDismissiveTextViewDelegate, JSMessageInputViewDelegate>
 
@@ -42,6 +43,10 @@
 - (void)keyboardWillShowHide:(NSNotification *)notification;
 
 - (UIViewAnimationOptions)animationOptionsForCurve:(UIViewAnimationCurve)curve;
+
+- (void)removeAttachment;
+
+- (void)updateSendButtonEnabled;
 
 @end
 
@@ -106,6 +111,9 @@
     [inputView.sendButton addTarget:self
                              action:@selector(sendPressed:)
                    forControlEvents:UIControlEventTouchUpInside];
+
+    [inputView.attachmentButton addTarget:self action:@selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [inputView.removeAttachmentButton addTarget:self action:@selector(removeAttachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:inputView];
     inputView.delegate = self;
@@ -195,6 +203,24 @@
                         onDate:[NSDate date]];
 }
 
+- (void)attachmentPressed:(UIButton*)sender {
+    self.messageInputView.attachmentButton.hidden = YES;
+    [self.messageInputView.attachmentUploadIndicator startAnimating];
+    self.messageInputView.sendButton.enabled = NO;
+    [self.delegate didAskToAddAttachment];
+}
+
+- (void)removeAttachmentPressed:(UIButton*)sender {
+    [self removeAttachment];
+    [self.delegate didRemoveAttachment];
+}
+
+- (void)removeAttachment {
+    self.messageInputView.attachmentThumbnail.image = nil;
+    self.messageInputView.removeAttachmentButton.hidden = YES;
+    self.messageInputView.attachmentButton.hidden = NO;
+}
+
 - (void)handleTapGestureRecognizer:(UITapGestureRecognizer *)tap {
     [self.messageInputView.textView resignFirstResponder];
 }
@@ -277,6 +303,16 @@
     [self.messageInputView.textView setText:nil];
     [self textViewDidChange:self.messageInputView.textView];
     [self.tableView reloadData];
+    [self removeAttachment];
+    [self updateSendButtonEnabled];
+}
+
+- (void)addAttachment:(UIImage *)attachmentThumbnail {
+    [self.messageInputView.attachmentUploadIndicator stopAnimating];
+    self.messageInputView.attachmentButton.hidden = YES;
+    self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
+    self.messageInputView.removeAttachmentButton.hidden = NO;
+    [self updateSendButtonEnabled];
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
@@ -342,7 +378,11 @@
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    self.messageInputView.sendButton.enabled = ([[textView.text js_stringByTrimingWhitespace] length] > 0);
+    [self updateSendButtonEnabled];
+}
+
+- (void)updateSendButtonEnabled {
+    self.messageInputView.sendButton.enabled = ([[self.messageInputView.textView.text js_stringByTrimingWhitespace] length] > 0) || (self.messageInputView.attachmentThumbnail.image != nil);
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {

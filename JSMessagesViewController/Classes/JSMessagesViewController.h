@@ -119,7 +119,8 @@
 
 - (void)didTapRecipient;
 - (void)didAskToRemoveRecipient;
-
+- (void)didAskToAddAttachment;
+- (void)didRemoveAttachment;
 @end
 
 
@@ -189,6 +190,8 @@
  *  @see JSMessagesViewDelegate.
  */
 - (void)finishSend;
+
+- (void)addAttachment:(UIImage*)attachmentThumbnail;
 
 
 /**
