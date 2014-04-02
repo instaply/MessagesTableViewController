@@ -211,7 +211,9 @@
     self.messageInputView.attachmentButton.hidden = YES;
     [self.messageInputView.attachmentUploadIndicator startAnimating];
     self.messageInputView.sendButton.enabled = NO;
-    [self.delegate didAskToAddAttachment];
+    if([self.delegate respondsToSelector:@selector(didAskToAddAttachment)]){
+        [self.delegate didAskToAddAttachment];
+    }
 }
 
 - (void)removeAttachmentPressed:(UIButton*)sender {
