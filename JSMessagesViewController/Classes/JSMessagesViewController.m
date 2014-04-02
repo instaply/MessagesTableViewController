@@ -165,11 +165,15 @@
 }
 
 - (void)messageInputViewDidTapRecipientName:(JSMessageInputView *)messageInputView {
-    [self.delegate didTapRecipient];
+    if([self.delegate respondsToSelector:@selector(didTapRecipient)]){
+        [self.delegate didTapRecipient];
+    }
 }
 
 - (void)messageInputViewDidTapRecipientRemove:(JSMessageInputView *)messageInputView {
-    [self.delegate didAskToRemoveRecipient];
+    if([self.delegate respondsToSelector:@selector(didAskToRemoveRecipient)]){
+        [self.delegate didAskToRemoveRecipient];
+    }
 }
 
 - (void)dealloc {
