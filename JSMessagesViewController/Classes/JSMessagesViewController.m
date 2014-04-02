@@ -44,8 +44,6 @@
 
 - (UIViewAnimationOptions)animationOptionsForCurve:(UIViewAnimationCurve)curve;
 
-- (void)removeAttachment;
-
 - (void)updateSendButtonEnabled;
 
 @end
