@@ -224,6 +224,7 @@
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
     self.messageInputView.attachmentButton.hidden = NO;
+    [self updateSendButtonEnabled];
 }
 
 - (void)handleTapGestureRecognizer:(UITapGestureRecognizer *)tap {
