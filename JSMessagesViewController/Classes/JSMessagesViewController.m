@@ -165,13 +165,13 @@
 }
 
 - (void)messageInputViewDidTapRecipientName:(JSMessageInputView *)messageInputView {
-    if([self.delegate respondsToSelector:@selector(didTapRecipient)]){
+    if ([self.delegate respondsToSelector:@selector(didTapRecipient)]) {
         [self.delegate didTapRecipient];
     }
 }
 
 - (void)messageInputViewDidTapRecipientRemove:(JSMessageInputView *)messageInputView {
-    if([self.delegate respondsToSelector:@selector(didAskToRemoveRecipient)]){
+    if ([self.delegate respondsToSelector:@selector(didAskToRemoveRecipient)]) {
         [self.delegate didAskToRemoveRecipient];
     }
 }
@@ -207,16 +207,16 @@
                         onDate:[NSDate date]];
 }
 
-- (void)attachmentPressed:(UIButton*)sender {
-    self.messageInputView.attachmentButton.hidden = YES;
-    [self.messageInputView.attachmentUploadIndicator startAnimating];
-    self.messageInputView.sendButton.enabled = NO;
-    if([self.delegate respondsToSelector:@selector(didAskToAddAttachment)]){
+- (void)attachmentPressed:(UIButton *)sender {
+    if ([self.delegate respondsToSelector:@selector(didAskToAddAttachment)]) {
+        self.messageInputView.attachmentButton.hidden = YES;
+        [self.messageInputView.attachmentUploadIndicator startAnimating];
+        self.messageInputView.sendButton.enabled = NO;
         [self.delegate didAskToAddAttachment];
     }
 }
 
-- (void)removeAttachmentPressed:(UIButton*)sender {
+- (void)removeAttachmentPressed:(UIButton *)sender {
     [self removeAttachment];
     [self.delegate didRemoveAttachment];
 }
