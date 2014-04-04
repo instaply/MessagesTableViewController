@@ -144,6 +144,8 @@
                                      forKeyPath:@"contentSize"
                                         options:NSKeyValueObservingOptionNew
                                         context:nil];
+
+    [self.tableView addObserver:self forKeyPath:@"tableFooterView" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -440,6 +442,7 @@
                              }
                          }
                          completion:^(BOOL finished) {
+
                          }];
 
         self.previousTextViewContentHeight = MIN(textView.contentSize.height, maxHeight);
@@ -485,6 +488,8 @@
                        context:(void *)context {
     if (object == self.messageInputView.textView && [keyPath isEqualToString:@"contentSize"]) {
         [self layoutAndAnimateMessageInputTextView:object];
+    } else if(object == self.tableView && [keyPath isEqualToString:@"tableFooterView"]){
+        [self layoutAndAnimateMessageInputTextView:self.messageInputView.textView];
     }
 }
 
