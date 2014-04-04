@@ -490,7 +490,7 @@
     if (object == self.messageInputView.textView && [keyPath isEqualToString:@"contentSize"]) {
         [self layoutAndAnimateMessageInputTextView:object];
     } else if(object == self.tableView && [keyPath isEqualToString:@"tableFooterView"]){
-        [self layoutAndAnimateMessageInputTextView:self.messageInputView.textView];
+        [self setTableViewInsetsWithBottomValue:self.tableView.contentInset.bottom];
     }
 }
 
