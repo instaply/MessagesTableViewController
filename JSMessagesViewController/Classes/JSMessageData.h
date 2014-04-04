@@ -21,6 +21,7 @@
 - (NSUInteger)contentLength;
 - (NSString*)url;
 - (BOOL)isImage;
+- (BOOL)isVideo;
 
 @end
 

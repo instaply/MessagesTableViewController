@@ -53,6 +53,10 @@
     return [self.contentType hasPrefix:@"image/"];
 }
 
+- (BOOL)isVideo {
+    return [self.contentType hasPrefix:@"video/"];
+}
+
 
 @end
 
