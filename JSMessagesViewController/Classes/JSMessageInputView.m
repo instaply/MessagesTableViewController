@@ -107,7 +107,7 @@
 
 - (void)configureAttachmentButton {
     UIButton *attachmentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *attachmentIcon = [UIImage imageNamed:@"button-photo"];
+    UIImage *attachmentIcon = [UIImage imageNamed:@"icon-attachment.png"];
     [attachmentButton setImage:attachmentIcon forState:UIControlStateNormal];
     [attachmentButton setImage:[attachmentIcon js_imageMaskWithColor:[UIColor darkGrayColor]] forState:UIControlStateHighlighted];
     self.attachmentButton = attachmentButton;
