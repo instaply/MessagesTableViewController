@@ -472,7 +472,7 @@
         insets.top = self.topLayoutGuide.length;
     }
 
-    insets.bottom = bottom;
+    insets.bottom = bottom + (self.tableView.tableFooterView ? self.tableView.tableFooterView.frame.size.height : 0);
 
     return insets;
 }

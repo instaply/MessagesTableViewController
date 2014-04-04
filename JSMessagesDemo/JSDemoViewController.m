@@ -38,6 +38,10 @@
     self.messageInputView.textView.placeHolder = @"New Message";
     self.sender = @"Jobs";
 
+    UILabel *footer = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    footer.text = @"footer label";
+    self.tableView.tableFooterView = footer;
+
     [self setBackgroundColor:[UIColor whiteColor]];
 
     self.messages = [[NSMutableArray alloc] initWithObjects:
