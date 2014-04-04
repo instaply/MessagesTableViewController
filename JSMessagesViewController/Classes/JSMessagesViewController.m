@@ -158,6 +158,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 
     [self.messageInputView.textView removeObserver:self forKeyPath:@"contentSize"];
+    [self.tableView removeObserver:self forKeyPath:@"tableFooterView"];
 }
 
 - (void)didReceiveMemoryWarning {
