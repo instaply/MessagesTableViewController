@@ -208,7 +208,7 @@
 
 - (void)didAskToAddAttachment {
     dispatch_queue_t queue = dispatch_get_main_queue();
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), queue, ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), queue, ^{
         UIImage *attachment = [UIImage imageNamed:@"IMG_0095.JPG"];
         NSUInteger attachmentSize = [[NSData alloc] initWithData:UIImageJPEGRepresentation((attachment), 1.0)].length;
         NSURL *attachmentURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"IMG_0095" ofType:@"JPG"]];

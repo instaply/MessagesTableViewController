@@ -21,6 +21,7 @@
 
 @property(assign, nonatomic) CGFloat previousTextViewContentHeight;
 @property(assign, nonatomic) BOOL isUserScrolling;
+@property(assign, nonatomic) BOOL isUploadingAttachment;
 
 - (void)setup;
 
@@ -210,6 +211,7 @@
         self.messageInputView.attachmentButton.hidden = YES;
         [self.messageInputView.attachmentUploadIndicator startAnimating];
         self.messageInputView.sendButton.enabled = NO;
+        self.isUploadingAttachment = YES;
         [self.delegate didAskToAddAttachment];
     }
 }
@@ -217,6 +219,8 @@
 - (void)removeAttachmentPressed:(UIButton *)sender {
     [self removeAttachment];
     [self.delegate didRemoveAttachment];
+    self.isUploadingAttachment = NO;
+    [self updateSendButtonEnabled];
 }
 
 - (void)removeAttachment {
@@ -224,6 +228,7 @@
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
     self.messageInputView.attachmentButton.hidden = NO;
+    self.isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
 
@@ -318,6 +323,7 @@
     self.messageInputView.attachmentButton.hidden = YES;
     self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
     self.messageInputView.removeAttachmentButton.hidden = NO;
+    self.isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
 
@@ -388,7 +394,7 @@
 }
 
 - (void)updateSendButtonEnabled {
-    self.messageInputView.sendButton.enabled = ([[self.messageInputView.textView.text js_stringByTrimingWhitespace] length] > 0) || (self.messageInputView.attachmentThumbnail.image != nil);
+    self.messageInputView.sendButton.enabled = !self.isUploadingAttachment && (([[self.messageInputView.textView.text js_stringByTrimingWhitespace] length] > 0) || (self.messageInputView.attachmentThumbnail.image != nil));
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
