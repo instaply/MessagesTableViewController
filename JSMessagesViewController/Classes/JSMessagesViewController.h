@@ -190,7 +190,7 @@
  *  @see JSMessagesViewDelegate.
  */
 - (void)finishSend;
-
+- (void)updateSendButtonEnabled;
 - (void)addAttachment:(UIImage*)attachmentThumbnail;
 - (void)removeAttachment;
 
