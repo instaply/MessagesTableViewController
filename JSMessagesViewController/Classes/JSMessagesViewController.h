@@ -183,6 +183,8 @@
 
 @property (copy, nonatomic) NSString *recipient;
 
+@property (readonly, nonatomic) BOOL isUploadingAttachment;
+
 #pragma mark - Messages view controller
 
 /**

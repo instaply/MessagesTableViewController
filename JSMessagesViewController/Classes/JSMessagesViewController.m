@@ -21,7 +21,6 @@
 
 @property(assign, nonatomic) CGFloat previousTextViewContentHeight;
 @property(assign, nonatomic) BOOL isUserScrolling;
-@property(assign, nonatomic) BOOL isUploadingAttachment;
 
 - (void)setup;
 
@@ -214,7 +213,7 @@
         self.messageInputView.attachmentButton.hidden = YES;
         [self.messageInputView.attachmentUploadIndicator startAnimating];
         self.messageInputView.sendButton.enabled = NO;
-        self.isUploadingAttachment = YES;
+        _isUploadingAttachment = YES;
         [self.delegate didAskToAddAttachment];
     }
 }
@@ -222,7 +221,7 @@
 - (void)removeAttachmentPressed:(UIButton *)sender {
     [self removeAttachment];
     [self.delegate didRemoveAttachment];
-    self.isUploadingAttachment = NO;
+    _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
 
@@ -231,7 +230,7 @@
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
     self.messageInputView.attachmentButton.hidden = NO;
-    self.isUploadingAttachment = NO;
+    _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
 
@@ -326,7 +325,7 @@
     self.messageInputView.attachmentButton.hidden = YES;
     self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
     self.messageInputView.removeAttachmentButton.hidden = NO;
-    self.isUploadingAttachment = NO;
+    _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
 
