@@ -343,7 +343,7 @@
 
     if (rows > 0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rows - 1 inSection:0]
-                              atScrollPosition:UITableViewScrollPositionBottom
+                              atScrollPosition:UITableViewScrollPositionTop
                                       animated:animated];
     }
 }
@@ -464,10 +464,8 @@
 
 - (void)setTableViewInsetsWithBottomValue:(CGFloat)bottom {
     UIEdgeInsets insets = [self tableViewInsetsWithBottomValue:bottom];
+    self.tableView.contentInset = insets;
     self.tableView.scrollIndicatorInsets = insets;
-
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(insets.top, insets.left, (insets.bottom + (self.tableView.tableFooterView ? self.tableView.tableFooterView.frame.size.height : 0)), insets.right);
-    self.tableView.contentInset = contentInsets;
 }
 
 - (UIEdgeInsets)tableViewInsetsWithBottomValue:(CGFloat)bottom {
