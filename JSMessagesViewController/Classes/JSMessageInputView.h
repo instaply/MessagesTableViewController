@@ -20,6 +20,7 @@
 
 @class JSRecipientView;
 @class JSMessageInputView;
+@class DAProgressOverlayView;
 
 /**
  *  The appearance style of the input bar view for composing a new message.
@@ -70,6 +71,7 @@ typedef NS_ENUM(NSUInteger, JSMessageInputViewStyle) {
 @property (strong, nonatomic) NSString *recipient;
 @property (weak, nonatomic) UIButton *attachmentButton;
 @property (weak, nonatomic) UIActivityIndicatorView *attachmentUploadIndicator;
+@property (weak, nonatomic) DAProgressOverlayView *progressOverlayView;
 @property (weak, nonatomic) UIImageView *attachmentThumbnail;
 @property (weak, nonatomic) UIButton *removeAttachmentButton;
 

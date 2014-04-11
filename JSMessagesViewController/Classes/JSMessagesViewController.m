@@ -16,6 +16,7 @@
 #import "JSMessageTextView.h"
 #import "NSString+JSMessagesView.h"
 #import "UIImage+JSMessagesView.h"
+#import "DAProgressOverlayView.h"
 
 @interface JSMessagesViewController () <JSDismissiveTextViewDelegate, JSMessageInputViewDelegate>
 
@@ -230,6 +231,8 @@
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
     self.messageInputView.attachmentButton.hidden = NO;
+    self.messageInputView.progressOverlayView.hidden = YES;
+    self.messageInputView.progressOverlayView.progress = 0.;
     _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
@@ -320,13 +323,29 @@
     [self updateSendButtonEnabled];
 }
 
-- (void)addAttachment:(UIImage *)attachmentThumbnail {
-    [self.messageInputView.attachmentUploadIndicator stopAnimating];
+- (void)startUploadingAttachment:(UIImage *)attachmentThumbnail {
     self.messageInputView.attachmentButton.hidden = YES;
     self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
-    self.messageInputView.removeAttachmentButton.hidden = NO;
-    _isUploadingAttachment = NO;
-    [self updateSendButtonEnabled];
+    [self.messageInputView.attachmentUploadIndicator stopAnimating];
+    self.messageInputView.progressOverlayView.hidden = NO;
+    [self.messageInputView.progressOverlayView displayOperationWillTriggerAnimation];
+}
+
+- (void)setAttachmentUploadProgress:(CGFloat)progress {
+    [self.messageInputView.progressOverlayView setProgress:progress];
+}
+
+- (void)finishUploadingAttachment {
+    [self.messageInputView.progressOverlayView displayOperationDidFinishAnimation];
+    double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        self.messageInputView.progressOverlayView.progress = 0.;
+        self.messageInputView.progressOverlayView.hidden = YES;
+        self.messageInputView.removeAttachmentButton.hidden = NO;
+        _isUploadingAttachment = NO;
+        [self updateSendButtonEnabled];
+    });
 }
 
 - (void)setBackgroundColor:(UIColor *)color {

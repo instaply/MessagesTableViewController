@@ -20,10 +20,11 @@
 #import "UIColor+JSMessagesView.h"
 #import "JSRecipientView.h"
 #import "UIImage+JSMessagesView.h"
+#import "DAProgressOverlayView.h"
 
 #define kAttachmentButtonWidth 40.0f
 #define kRemoveAttachmentButtonOffsetX 4.0f
-#define kRemoveAttachmentButtonOffsetY 2.0f
+#define kRemoveAttachmentButtonOffsetY 4.0f
 
 @interface JSMessageInputView ()
 
@@ -32,6 +33,8 @@
 - (void)configureAttachmentButton;
 
 - (void)configureAttachmentUploadIndicator;
+
+- (void)configureProgressOverlayView;
 
 - (void)configureAttachmentThumbnail;
 
@@ -119,10 +122,18 @@
     self.attachmentUploadIndicator = activityIndicatorView;
 }
 
+- (void)configureProgressOverlayView {
+    DAProgressOverlayView *progressOverlayView = [[DAProgressOverlayView alloc] init];
+    progressOverlayView.hidden = YES;
+    self.progressOverlayView = progressOverlayView;
+}
+
 - (void)configureAttachmentThumbnail {
     UIImageView *attachmentThumbnail = [[UIImageView alloc] init];
     attachmentThumbnail.contentMode = UIViewContentModeScaleAspectFill;
     attachmentThumbnail.clipsToBounds = YES;
+    attachmentThumbnail.layer.masksToBounds = YES;
+    attachmentThumbnail.layer.cornerRadius = 4.;
     self.attachmentThumbnail = attachmentThumbnail;
 }
 
@@ -194,6 +205,7 @@
         [self configureAttachmentUploadIndicator];
         [self configureAttachmentThumbnail];
         [self configureRemoveAttachmentButton];
+        [self configureProgressOverlayView];
 
         _textView.delegate = delegate;
         _textView.keyboardDelegate = delegate;
@@ -306,6 +318,15 @@
     _attachmentThumbnail = attachmentThumbnail;
 }
 
+- (void)setProgressOverlayView:(DAProgressOverlayView *)progressOverlayView {
+    if(_progressOverlayView) {
+        [_progressOverlayView removeFromSuperview];
+    }
+    progressOverlayView.frame = CGRectMake(0, 0, self.attachmentThumbnail.frame.size.width, self.attachmentThumbnail.frame.size.height);
+    [self.attachmentThumbnail addSubview:progressOverlayView];
+    _progressOverlayView = progressOverlayView;
+}
+
 - (void)setRecipient:(NSString *)recipient {
     if (recipient != nil && _recipient == nil) {
         [self addSubview:_recipientView];
@@ -359,11 +380,12 @@
     }
     _attachmentUploadIndicator.frame = _attachmentButton.frame;
     _attachmentThumbnail.frame = CGRectMake(
-            _attachmentButton.frame.origin.x,
-            _attachmentButton.frame.origin.y - ((kAttachmentButtonWidth - _attachmentButton.frame.size.height) / 2),
-            _attachmentButton.frame.size.width,
-            kAttachmentButtonWidth
+            _attachmentButton.frame.origin.x + 2,
+            _attachmentButton.frame.origin.y - ((kAttachmentButtonWidth - _attachmentButton.frame.size.height) / 2) + 2,
+            _attachmentButton.frame.size.width - 4,
+            kAttachmentButtonWidth - 4
     );
+    _progressOverlayView.frame = CGRectMake(0, 0, self.attachmentThumbnail.frame.size.width, self.attachmentThumbnail.frame.size.height);
     _removeAttachmentButton.frame = CGRectMake(self.attachmentThumbnail.frame.origin.x - kRemoveAttachmentButtonOffsetX, self.attachmentThumbnail.frame.origin.y - kRemoveAttachmentButtonOffsetY, 16, 16);
 }
 

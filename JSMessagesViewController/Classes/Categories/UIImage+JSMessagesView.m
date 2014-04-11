@@ -87,7 +87,7 @@
 
 - (UIImage *)js_imageAsRoundedSquare:(BOOL)clipToCircle withSideLength:(CGFloat)sideLength borderColor:(UIColor *)borderColor borderWidth:(CGFloat)borderWidth shadowOffSet:(CGSize)shadowOffset {
     // increase given size for border and shadow
-    CGFloat increase = sideLength * 0.06f;
+    CGFloat increase = sideLength * 0.;// * 0.06f;
     CGFloat newSize = sideLength + increase;
 
     CGRect newRect = CGRectMake(0.0f,

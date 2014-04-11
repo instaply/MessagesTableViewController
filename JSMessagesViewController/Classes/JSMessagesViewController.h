@@ -193,7 +193,9 @@
  */
 - (void)finishSend;
 - (void)updateSendButtonEnabled;
-- (void)addAttachment:(UIImage*)attachmentThumbnail;
+- (void)startUploadingAttachment:(UIImage*)attachmentThumbnail;
+- (void)setAttachmentUploadProgress:(CGFloat)progress;
+- (void)finishUploadingAttachment;
 - (void)removeAttachment;
 
 

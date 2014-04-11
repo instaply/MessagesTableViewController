@@ -14,6 +14,7 @@
 
 #import "JSDemoViewController.h"
 #import "JSMessage.h"
+#import "DAProgressOverlayView.h"
 
 #define kSubtitleJobs @"Jobs"
 #define kSubtitleWoz @"Steve Wozniak"
@@ -21,6 +22,7 @@
 
 @interface JSDemoViewController ()
 @property (strong, nonatomic) JSAttachment *currentAttachment;
+@property (strong, nonatomic) NSTimer *timer;
 @end
 
 @implementation JSDemoViewController
@@ -212,15 +214,24 @@
 }
 
 - (void)didAskToAddAttachment {
-    dispatch_queue_t queue = dispatch_get_main_queue();
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), queue, ^{
-        UIImage *attachment = [UIImage imageNamed:@"IMG_0095.JPG"];
-        NSUInteger attachmentSize = [[NSData alloc] initWithData:UIImageJPEGRepresentation((attachment), 1.0)].length;
-        NSURL *attachmentURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"IMG_0095" ofType:@"JPG"]];
-        JSAttachment *currentAttachment = [[JSAttachment alloc] initWithName:@"IMG_0095.JPG" contentType:@"image/jpeg" contentLength:attachmentSize url:attachmentURL.absoluteString];
-        self.currentAttachment = currentAttachment;
-        [self addAttachment:attachment];
+    UIImage *attachment = [UIImage imageNamed:@"IMG_0095.JPG"];
+    [self startUploadingAttachment:attachment];
+
+    double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
     });
+}
+
+- (void)updateProgress {
+    CGFloat progress = self.messageInputView.progressOverlayView.progress + 0.01;
+    if (progress >= 1) {
+        [self.timer invalidate];
+        [self finishUploadingAttachment];
+    } else {
+        [self setAttachmentUploadProgress:progress];
+    }
 }
 
 - (void)didRemoveAttachment {
