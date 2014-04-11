@@ -331,6 +331,17 @@
     [self.messageInputView.progressOverlayView displayOperationWillTriggerAnimation];
 }
 
+- (void)setAttachment:(UIImage *)attachmentThumbnail {
+    self.messageInputView.attachmentButton.hidden = YES;
+    self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
+    [self.messageInputView.attachmentUploadIndicator stopAnimating];
+    self.messageInputView.progressOverlayView.hidden = YES;
+    self.messageInputView.progressOverlayView.progress = 0.;
+    self.messageInputView.removeAttachmentButton.hidden = NO;
+    _isUploadingAttachment = NO;
+    [self updateSendButtonEnabled];
+}
+
 - (void)setAttachmentUploadProgress:(CGFloat)progress {
     [self.messageInputView.progressOverlayView setProgress:progress];
 }
