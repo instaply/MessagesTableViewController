@@ -343,7 +343,9 @@
 }
 
 - (void)setAttachmentUploadProgress:(CGFloat)progress {
-    [self.messageInputView.progressOverlayView setProgress:progress];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.messageInputView.progressOverlayView setProgress:progress];
+    });
 }
 
 - (void)finishUploadingAttachment {
