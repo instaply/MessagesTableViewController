@@ -196,7 +196,7 @@
 - (void)startUploadingAttachment:(UIImage*)attachmentThumbnail;
 - (void)setAttachmentUploadProgress:(CGFloat)progress;
 - (void)finishUploadingAttachment;
-- (void)setAttachment:(UIImage*)attachmentThumbnail
+- (void)setAttachment:(UIImage*)attachmentThumbnail;
 - (void)removeAttachment;
 
 
