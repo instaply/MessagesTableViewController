@@ -125,6 +125,7 @@
 - (void)configureProgressOverlayView {
     DAProgressOverlayView *progressOverlayView = [[DAProgressOverlayView alloc] init];
     progressOverlayView.hidden = YES;
+    progressOverlayView.triggersDownloadDidFinishAnimationAutomatically = NO;
     self.progressOverlayView = progressOverlayView;
 }
 
