@@ -214,7 +214,7 @@
 }
 
 - (void)didAskToAddAttachment {
-    UIImage *attachment = [UIImage imageNamed:@"IMG_0095.JPG"];
+    UIImage *attachment = [UIImage imageNamed:@"3387753757_f5ab39dcc5_b.jpg"];
     [self startUploadingAttachment:attachment];
 
     double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;

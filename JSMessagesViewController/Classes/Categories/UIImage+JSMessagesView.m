@@ -90,10 +90,18 @@
     CGFloat increase = sideLength * 0.;// * 0.06f;
     CGFloat newSize = sideLength + increase;
 
-    CGRect newRect = CGRectMake(0.0f,
+    CGFloat scale = MAX(newSize/self.size.width, newSize/self.size.height);
+    CGFloat width = self.size.width * scale;
+    CGFloat height = self.size.height * scale;
+    CGRect newRect = CGRectMake((newSize - width)/2.0f,
+                                      (newSize - height)/2.0f,
+                                      width,
+                                      height);
+
+    /*CGRect newRect = CGRectMake(0.0f,
             0.0f,
             newSize,
-            newSize);
+            newSize);*/
 
     // fit image inside border and shadow
     CGRect imgRect = CGRectMake(increase,
@@ -115,7 +123,6 @@
 
     // draw border
     if (borderColor && borderWidth) {
-        //CGPathRef borderPath = (clipToCircle) ? CGPathCreateWithEllipseInRect(imgRect, NULL) : CGPathCreateWithRect(imgRect, NULL);
         CGPathRef borderPath = (clipToCircle) ? CGPathCreateWithRoundedRect(imgRect, 4.0, 4.0, NULL) : CGPathCreateWithRect(imgRect, NULL);
         CGContextAddPath(context, borderPath);
 
