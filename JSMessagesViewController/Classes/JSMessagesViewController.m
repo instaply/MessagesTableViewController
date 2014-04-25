@@ -602,7 +602,6 @@
 }
 
 - (void)setRecipient:(NSString *)recipient {
-    JSMessageInputViewStyle inputViewStyle = [self.delegate inputViewStyle];
     CGFloat inputViewHeight = self.messageInputView.frame.size.height;
     CGFloat inputViewY = self.messageInputView.frame.origin.y;
     CGFloat bottomInset = _tableView.contentInset.bottom;

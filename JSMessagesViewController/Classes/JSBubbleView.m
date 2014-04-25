@@ -226,8 +226,9 @@
         stringSize = CGRectIntegral(stringRect).size;
     }
     else {
-        stringSize = [txt sizeWithFont:[[JSBubbleView appearance] font]
-                     constrainedToSize:CGSizeMake(maxWidth, maxHeight)];
+        NSAttributedString *attributedTxt = [[NSAttributedString alloc] initWithString:txt attributes:@{NSFontAttributeName: [[JSBubbleView appearance] font]}];
+        CGRect txtRect = [attributedTxt boundingRectWithSize:CGSizeMake(maxWidth, maxHeight) options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+        stringSize = CGSizeMake(ceilf(txtRect.size.width), ceilf(txtRect.size.height));
     }
     
     return CGSizeMake(roundf(stringSize.width), roundf(stringSize.height));

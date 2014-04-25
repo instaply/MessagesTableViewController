@@ -24,7 +24,7 @@
     if (self) {
         NSString *to = NSLocalizedString(@"To: ", @"");
         UIFont *toFont = [UIFont systemFontOfSize:17.0f];
-        CGFloat toWidth = [to sizeWithFont:toFont].width;
+        CGFloat toWidth = [to sizeWithAttributes:@{NSFontAttributeName:toFont}].width;
         CGRect toFrame = CGRectMake(PADDING, 0, toWidth, frame.size.height);
         CGRect nameFrame = CGRectMake(toWidth + PADDING, 0, frame.size.width - toWidth - frame.size.height - PADDING, frame.size.height);
         CGRect removeFrame = CGRectMake(toWidth + nameFrame.size.width + PADDING, 0, frame.size.height, frame.size.height);
@@ -83,7 +83,7 @@
 
     NSString *to = NSLocalizedString(@"To: ", @"");
     UIFont *toFont = [UIFont systemFontOfSize:17.0f];
-    CGFloat toWidth = [to sizeWithFont:toFont].width;
+    CGFloat toWidth = [to sizeWithAttributes:@{NSFontAttributeName:toFont}].width;
     CGRect toFrame = CGRectMake(PADDING, 0, toWidth, self.frame.size.height);
     CGRect nameFrame = CGRectMake(toWidth + PADDING, 0, self.frame.size.width - toWidth - self.frame.size.height - PADDING, self.frame.size.height);
     CGRect removeFrame = CGRectMake(toWidth + nameFrame.size.width + PADDING, 0, self.frame.size.height, self.frame.size.height);
