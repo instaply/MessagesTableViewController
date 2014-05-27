@@ -40,6 +40,8 @@
 
 - (void)configureRemoveAttachmentButton;
 
+- (void)configureStopAttachmentUploadButton;
+
 - (void)configureRecipientBarWithStyle:(JSMessageInputViewStyle)style;
 
 - (void)configureInputBarWithStyle:(JSMessageInputViewStyle)style;
@@ -138,6 +140,7 @@
     attachmentThumbnail.clipsToBounds = YES;
     attachmentThumbnail.layer.masksToBounds = YES;
     attachmentThumbnail.layer.cornerRadius = 4.;
+    attachmentThumbnail.userInteractionEnabled = YES;
     self.attachmentThumbnail = attachmentThumbnail;
 }
 
@@ -147,6 +150,13 @@
     [removeAttachmentButton setImage:[[UIImage imageNamed:@"button-remove-attachment-pressed.png"] js_imageAsCircle:YES withDiamter:16.0 borderColor:nil borderWidth:0.0 shadowOffSet:CGSizeZero] forState:UIControlStateHighlighted];
     removeAttachmentButton.hidden = YES;
     self.removeAttachmentButton = removeAttachmentButton;
+}
+
+- (void)configureStopAttachmentUploadButton {
+    UIButton *stopAttachmentUploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [stopAttachmentUploadButton setImage:[UIImage imageNamed:@"473-stop2"] forState:UIControlStateNormal];
+    stopAttachmentUploadButton.enabled = YES;
+    self.stopAttachmentUploadButton = stopAttachmentUploadButton;
 }
 
 - (void)configureSendButtonWithStyle:(JSMessageInputViewStyle)style {
@@ -205,11 +215,12 @@
         [self configureRecipientBarWithStyle:style];
         [self configureInputBarWithStyle:style];
         [self configureSendButtonWithStyle:style];
-        [self configureAttachmentButton];
         [self configureAttachmentUploadIndicator];
         [self configureAttachmentThumbnail];
+        [self configureAttachmentButton];
         [self configureRemoveAttachmentButton];
         [self configureProgressOverlayView];
+        [self configureStopAttachmentUploadButton];
 
         _textView.delegate = delegate;
         _textView.keyboardDelegate = delegate;
@@ -302,6 +313,17 @@
     _removeAttachmentButton = btn;
 }
 
+- (void)setStopAttachmentUploadButton:(UIButton *)btn {
+    if (_stopAttachmentUploadButton) {
+        [_stopAttachmentUploadButton removeFromSuperview];
+    }
+
+    btn.frame = CGRectMake(0,0,self.attachmentThumbnail.frame.size.width, self.attachmentThumbnail.frame.size.height);
+
+    [self.progressOverlayView addSubview:btn];
+    _stopAttachmentUploadButton = btn;
+}
+
 - (void)setAttachmentThumbnail:(UIImageView *)attachmentThumbnail {
     if (_attachmentThumbnail) {
         [_attachmentThumbnail removeFromSuperview];
@@ -390,6 +412,7 @@
             kAttachmentButtonWidth - 4
     );
     _progressOverlayView.frame = CGRectMake(0, 0, self.attachmentThumbnail.frame.size.width, self.attachmentThumbnail.frame.size.height);
+    _stopAttachmentUploadButton.frame = CGRectMake(0, 0, self.attachmentThumbnail.frame.size.width, self.attachmentThumbnail.frame.size.height);
     _removeAttachmentButton.frame = CGRectMake(self.attachmentThumbnail.frame.origin.x - kRemoveAttachmentButtonOffsetX, self.attachmentThumbnail.frame.origin.y - kRemoveAttachmentButtonOffsetY, 16, 16);
 }
 

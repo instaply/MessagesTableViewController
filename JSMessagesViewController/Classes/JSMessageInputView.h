@@ -74,6 +74,7 @@ typedef NS_ENUM(NSUInteger, JSMessageInputViewStyle) {
 @property (weak, nonatomic) DAProgressOverlayView *progressOverlayView;
 @property (weak, nonatomic) UIImageView *attachmentThumbnail;
 @property (weak, nonatomic) UIButton *removeAttachmentButton;
+@property (weak, nonatomic) UIButton *stopAttachmentUploadButton;
 
 #pragma mark - Initialization
 

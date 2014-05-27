@@ -42,27 +42,26 @@
 
     [self setBackgroundColor:[UIColor whiteColor]];
 
-    self.messages = [[NSMutableArray alloc] initWithObjects:
+    self.messages = [@[
             [[JSMessage alloc] initWithText:@"JSMessagesViewController is simple and easy to use." sender:kSubtitleJobs date:[NSDate distantPast]],
             [[JSMessage alloc] initWithText:@"It's highly customizable." sender:kSubtitleWoz date:[NSDate distantPast]],
-            [[JSMessage alloc] initWithText:@"It even has data detectors. You can call me tonight. My cell number is 452-123-4567. \nMy website is www.hexedbits.com." sender:kSubtitleJobs date:[NSDate distantPast]],
+            [[JSMessage alloc] initWithText:@"It even has data detectors. You can call me tonight. My cell number is 452-123-4567. nMy website is www.hexedbits.com." sender:kSubtitleJobs date:[NSDate distantPast]],
             [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleCook date:[NSDate distantPast]],
             [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleJobs date:[NSDate date]],
             [[JSMessage alloc] initWithText:@"Group chat. Sound effects and images included. Animations are smooth. Messages can be of arbitrary size!" sender:kSubtitleWoz date:[NSDate date]],
             [[JSMessage alloc] initWithText:@"Attachment test from Jobs." sender:kSubtitleJobs date:[NSDate date] attachment:[[JSAttachment alloc] initWithName:@"test1.pdf" contentType:@"application/pdf" contentLength:100000000 url:@"file.pdf"]],
-            [[JSMessage alloc] initWithText:@"Attachment test from Woz." sender:kSubtitleWoz date:[NSDate date] attachment:[[JSAttachment alloc] initWithName:@"test2.pdf" contentType:@"application/pdf" contentLength:100000000 url:@"file.pdf"]],
-            nil];
+            [[JSMessage alloc] initWithText:@"Attachment test from Woz." sender:kSubtitleWoz date:[NSDate date] attachment:[[JSAttachment alloc] initWithName:@"test2.pdf" contentType:@"application/pdf" contentLength:100000000 url:@"file.pdf"]]] mutableCopy];
 
 
     for (NSUInteger i = 0; i < 3; i++) {
         [self.messages addObjectsFromArray:self.messages];
     }
 
-    self.avatars = [[NSDictionary alloc] initWithObjectsAndKeys:
-            [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-jobs" croppedToCircle:YES], kSubtitleJobs,
-            [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-woz" croppedToCircle:YES], kSubtitleWoz,
-            [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-cook" croppedToCircle:YES], kSubtitleCook,
-            nil];
+    self.avatars = @{
+            kSubtitleJobs : [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-jobs" croppedToCircle:YES],
+            kSubtitleWoz : [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-woz" croppedToCircle:YES],
+            kSubtitleCook : [JSAvatarImageFactory avatarImageNamed:@"demo-avatar-cook" croppedToCircle:YES]
+    };
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
                                                                                            target:self
@@ -138,10 +137,7 @@
 #pragma mark - Messages view delegate: OPTIONAL
 
 - (BOOL)shouldDisplayTimestampForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row % 3 == 0) {
-        return YES;
-    }
-    return NO;
+    return indexPath.row % 3 == 0;
 }
 
 //
@@ -197,11 +193,11 @@
 #pragma mark - Messages view data source: REQUIRED
 
 - (JSMessage *)messageForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.messages objectAtIndex:indexPath.row];
+    return self.messages[(NSUInteger) indexPath.row];
 }
 
 - (UIImageView *)avatarImageViewForRowAtIndexPath:(NSIndexPath *)indexPath sender:(NSString *)sender {
-    UIImage *image = [self.avatars objectForKey:sender];
+    UIImage *image = self.avatars[sender];
     return [[UIImageView alloc] initWithImage:image];
 }
 
@@ -217,15 +213,15 @@
     UIImage *attachment = [UIImage imageNamed:@"3387753757_f5ab39dcc5_b.jpg"];
     [self startUploadingAttachment:attachment];
 
-    double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;
+    double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration*10;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
     });
 }
 
 - (void)updateProgress {
-    CGFloat progress = self.messageInputView.progressOverlayView.progress + 0.01;
+    CGFloat progress = self.messageInputView.progressOverlayView.progress + 0.01f;
     if (progress >= 1) {
         [self.timer invalidate];
         [self finishUploadingAttachment];
@@ -238,6 +234,9 @@
     NSLog(@"Attachment removed");
 }
 
+- (void)didCancelAttachmentUpload {
+    NSLog(@"Attachment upload cancelled");
+}
 
 #pragma mark - View rotation
 

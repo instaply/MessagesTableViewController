@@ -121,6 +121,7 @@
 - (void)didAskToRemoveRecipient;
 - (void)didAskToAddAttachment;
 - (void)didRemoveAttachment;
+- (void)didCancelAttachmentUpload;
 @end
 
 

@@ -7,7 +7,7 @@ DEPENDENCIES:
   - JSQSystemSoundPlayer
 
 SPEC CHECKSUMS:
-  DAProgressOverlayView: abfd16f70476496e34176eeb94b139fc5e6d5f6b
-  JSQSystemSoundPlayer: 28ccd01a92a0cebc6de6361e8499011b4cb6dab7
+  DAProgressOverlayView: 66f743e4bbbb0b5fe241670b9156d948cc228fc1
+  JSQSystemSoundPlayer: 2b70470d775d79e666ac58068744cac92268f95f
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.32.1

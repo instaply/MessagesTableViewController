@@ -13,7 +13,6 @@
 //
 
 #import "JSMessagesViewController.h"
-#import "JSMessageTextView.h"
 #import "NSString+JSMessagesView.h"
 #import "UIImage+JSMessagesView.h"
 #import "DAProgressOverlayView.h"
@@ -113,6 +112,7 @@
 
     [inputView.attachmentButton addTarget:self action:@selector(attachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
     [inputView.removeAttachmentButton addTarget:self action:@selector(removeAttachmentPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [inputView.stopAttachmentUploadButton addTarget:self action:@selector(stopAttachmentUploadPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:inputView];
     inputView.delegate = self;
@@ -226,13 +226,20 @@
     [self updateSendButtonEnabled];
 }
 
+- (void)stopAttachmentUploadPressed:(id)sender {
+    [self removeAttachment];
+    [self.delegate didCancelAttachmentUpload];
+    _isUploadingAttachment = NO;
+    [self updateSendButtonEnabled];
+}
+
 - (void)removeAttachment {
     [self.messageInputView.attachmentUploadIndicator stopAnimating];
     self.messageInputView.attachmentThumbnail.image = nil;
     self.messageInputView.removeAttachmentButton.hidden = YES;
-    self.messageInputView.attachmentButton.hidden = NO;
     self.messageInputView.progressOverlayView.hidden = YES;
-    self.messageInputView.progressOverlayView.progress = 0.;
+    self.messageInputView.progressOverlayView.progress = 0.f;
+    self.messageInputView.attachmentButton.hidden = NO;
     _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
 }
@@ -336,7 +343,7 @@
     self.messageInputView.attachmentThumbnail.image = [attachmentThumbnail js_imageAsRoundedSquare:YES withSideLength:self.messageInputView.textView.frame.size.height borderColor:[UIColor whiteColor] borderWidth:2 shadowOffSet:CGSizeZero];
     [self.messageInputView.attachmentUploadIndicator stopAnimating];
     self.messageInputView.progressOverlayView.hidden = YES;
-    self.messageInputView.progressOverlayView.progress = 0.;
+    self.messageInputView.progressOverlayView.progress = 0.f;
     self.messageInputView.removeAttachmentButton.hidden = NO;
     _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
@@ -353,7 +360,7 @@
     double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        self.messageInputView.progressOverlayView.progress = 0.;
+        self.messageInputView.progressOverlayView.progress = 0.f;
         self.messageInputView.progressOverlayView.hidden = YES;
         self.messageInputView.removeAttachmentButton.hidden = NO;
         _isUploadingAttachment = NO;
@@ -537,8 +544,8 @@
 
 - (void)keyboardWillShowHide:(NSNotification *)notification {
     CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    UIViewAnimationCurve curve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve curve = (UIViewAnimationCurve) [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    double duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     [UIView animateWithDuration:duration
                           delay:0.0
@@ -597,7 +604,7 @@
             return UIViewAnimationOptionCurveLinear;
 
         default:
-            return kNilOptions;
+            return (UIViewAnimationOptions) kNilOptions;
     }
 }
 
