@@ -230,6 +230,11 @@
     }
 }
 
+- (void)didAskToCancelAttachmentUpload {
+    [self stopAttachmentUpload];
+}
+
+
 - (void)didRemoveAttachment {
     NSLog(@"Attachment removed");
 }

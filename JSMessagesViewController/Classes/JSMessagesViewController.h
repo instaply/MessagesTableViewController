@@ -122,6 +122,7 @@
 - (void)didAskToAddAttachment;
 - (void)didRemoveAttachment;
 - (void)didCancelAttachmentUpload;
+- (void)didAskToCancelAttachmentUpload;
 @end
 
 
@@ -198,6 +199,9 @@
 - (void)setAttachmentUploadProgress:(CGFloat)progress;
 - (void)finishUploadingAttachment;
 - (void)setAttachment:(UIImage*)attachmentThumbnail;
+
+- (void)stopAttachmentUpload;
+
 - (void)removeAttachment;
 
 

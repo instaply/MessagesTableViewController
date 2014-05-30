@@ -227,6 +227,12 @@
 }
 
 - (void)stopAttachmentUploadPressed:(id)sender {
+    if([self.delegate respondsToSelector:@selector(didAskToCancelAttachmentUpload)]){
+        [self.delegate didAskToCancelAttachmentUpload];
+    }
+}
+
+- (void)stopAttachmentUpload {
     [self removeAttachment];
     [self.delegate didCancelAttachmentUpload];
     _isUploadingAttachment = NO;
@@ -358,8 +364,8 @@
 - (void)finishUploadingAttachment {
     [self.messageInputView.progressOverlayView displayOperationDidFinishAnimation];
     double delayInSeconds = self.messageInputView.progressOverlayView.stateChangeAnimationDuration;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t) (delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
         self.messageInputView.progressOverlayView.progress = 0.f;
         self.messageInputView.progressOverlayView.hidden = YES;
         self.messageInputView.removeAttachmentButton.hidden = NO;
@@ -460,29 +466,29 @@
     if (changeInHeight != 0.0f) {
         [UIView animateWithDuration:0.25f
                          animations:^{
-                             [self setTableViewInsetsWithBottomValue:self.tableView.contentInset.bottom + changeInHeight];
+            [self setTableViewInsetsWithBottomValue:self.tableView.contentInset.bottom + changeInHeight];
 
-                             [self scrollToBottomAnimated:NO];
+            [self scrollToBottomAnimated:NO];
 
-                             if (isShrinking) {
-                                 // if shrinking the view, animate text view frame BEFORE input view frame
-                                 [self.messageInputView adjustTextViewHeightBy:changeInHeight];
-                             }
+            if (isShrinking) {
+                // if shrinking the view, animate text view frame BEFORE input view frame
+                [self.messageInputView adjustTextViewHeightBy:changeInHeight];
+            }
 
-                             CGRect inputViewFrame = self.messageInputView.frame;
-                             self.messageInputView.frame = CGRectMake(0.0f,
-                                     inputViewFrame.origin.y - changeInHeight,
-                                     inputViewFrame.size.width,
-                                     inputViewFrame.size.height + changeInHeight);
+            CGRect inputViewFrame = self.messageInputView.frame;
+            self.messageInputView.frame = CGRectMake(0.0f,
+                    inputViewFrame.origin.y - changeInHeight,
+                    inputViewFrame.size.width,
+                    inputViewFrame.size.height + changeInHeight);
 
-                             if (!isShrinking) {
-                                 // growing the view, animate the text view frame AFTER input view frame
-                                 [self.messageInputView adjustTextViewHeightBy:changeInHeight];
-                             }
-                         }
+            if (!isShrinking) {
+                // growing the view, animate the text view frame AFTER input view frame
+                [self.messageInputView adjustTextViewHeightBy:changeInHeight];
+            }
+        }
                          completion:^(BOOL finished) {
 
-                         }];
+        }];
 
         self.previousTextViewContentHeight = MIN(textView.contentSize.height, maxHeight);
     }
@@ -527,7 +533,7 @@
                        context:(void *)context {
     if (object == self.messageInputView.textView && [keyPath isEqualToString:@"contentSize"]) {
         [self layoutAndAnimateMessageInputTextView:object];
-    } else if(object == self.tableView && [keyPath isEqualToString:@"tableFooterView"]){
+    } else if (object == self.tableView && [keyPath isEqualToString:@"tableFooterView"]) {
         [self setTableViewInsetsWithBottomValue:self.tableView.contentInset.bottom];
     }
 }
@@ -551,24 +557,24 @@
                           delay:0.0
                         options:[self animationOptionsForCurve:curve]
                      animations:^{
-                         CGFloat keyboardY = [self.view convertRect:keyboardRect fromView:nil].origin.y;
+        CGFloat keyboardY = [self.view convertRect:keyboardRect fromView:nil].origin.y;
 
-                         CGRect inputViewFrame = self.messageInputView.frame;
-                         CGFloat inputViewFrameY = keyboardY - inputViewFrame.size.height;
+        CGRect inputViewFrame = self.messageInputView.frame;
+        CGFloat inputViewFrameY = keyboardY - inputViewFrame.size.height;
 
-                         // for ipad modal form presentations
-                         CGFloat messageViewFrameBottom = self.view.frame.size.height - inputViewFrame.size.height;
-                         if (inputViewFrameY > messageViewFrameBottom)
-                             inputViewFrameY = messageViewFrameBottom;
+        // for ipad modal form presentations
+        CGFloat messageViewFrameBottom = self.view.frame.size.height - inputViewFrame.size.height;
+        if (inputViewFrameY > messageViewFrameBottom)
+            inputViewFrameY = messageViewFrameBottom;
 
-                         self.messageInputView.frame = CGRectMake(inputViewFrame.origin.x,
-                                 inputViewFrameY,
-                                 inputViewFrame.size.width,
-                                 inputViewFrame.size.height);
+        self.messageInputView.frame = CGRectMake(inputViewFrame.origin.x,
+                inputViewFrameY,
+                inputViewFrame.size.width,
+                inputViewFrame.size.height);
 
-                         [self setTableViewInsetsWithBottomValue:self.view.frame.size.height
-                                 - self.messageInputView.frame.origin.y];
-                     }
+        [self setTableViewInsetsWithBottomValue:self.view.frame.size.height
+                - self.messageInputView.frame.origin.y];
+    }
                      completion:nil];
 }
 
