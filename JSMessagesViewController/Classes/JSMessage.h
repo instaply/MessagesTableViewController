@@ -18,10 +18,10 @@
 @interface JSAttachment : NSObject <JSAttachmentData, NSCoding, NSCopying>
 @property (copy, nonatomic) NSString *name;
 @property (copy, nonatomic) NSString *contentType;
-@property (assign, nonatomic) NSUInteger contentLength;
+@property (strong, nonatomic) NSNumber *contentLength;
 @property (copy, nonatomic) NSString *url;
 
-- (id)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength url:(NSString*)url;
+- (id)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSNumber*)contentLength url:(NSString*)url;
 @end
 
 /**

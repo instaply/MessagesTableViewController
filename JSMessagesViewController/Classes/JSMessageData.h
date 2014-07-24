@@ -18,7 +18,7 @@
 
 - (NSString*)name;
 - (NSString*)contentType;
-- (NSUInteger)contentLength;
+- (NSNumber*)contentLength;
 - (NSString*)url;
 - (BOOL)isImage;
 - (BOOL)isVideo;

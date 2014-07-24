@@ -16,7 +16,7 @@
 
 @implementation JSAttachment
 
-- (instancetype)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSUInteger)contentLength url:(NSString*)url {
+- (instancetype)initWithName:(NSString *)name contentType:(NSString *)contentType contentLength:(NSNumber*)contentLength url:(NSString*)url {
     if((self = [super init])){
         _name = name;
         _contentType = contentType;
@@ -30,7 +30,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeObject:self.contentType forKey:@"contentType"];
-    [aCoder encodeInteger:self.contentLength forKey:@"contentLength"];
+    [aCoder encodeObject:self.contentLength forKey:@"contentLength"];
     [aCoder encodeObject:self.url forKey:@"url"];
 }
 
@@ -39,7 +39,7 @@
     if (self) {
         _name = [aDecoder decodeObjectForKey:@"name"];
         _contentType = [aDecoder decodeObjectForKey:@"contentType"];
-        _contentLength = (NSUInteger) [aDecoder decodeIntegerForKey:@"contentLength"];
+        _contentLength = [aDecoder decodeObjectForKey:@"contentLength"];
         _url = [aDecoder decodeObjectForKey:@"url"];
     }
     return self;
