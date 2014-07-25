@@ -17,7 +17,7 @@
 #import "UIImage+JSMessagesView.h"
 #import "DAProgressOverlayView.h"
 
-@interface JSMessagesViewController () <JSDismissiveTextViewDelegate, JSMessageInputViewDelegate>
+@interface JSMessagesViewController () <JSDismissiveTextViewDelegate, JSMessageInputViewDelegate, UIGestureRecognizerDelegate>
 
 @property(assign, nonatomic) CGFloat previousTextViewContentHeight;
 @property(assign, nonatomic) BOOL isUserScrolling;
@@ -97,6 +97,7 @@
 
     if (!allowsPan) {
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGestureRecognizer:)];
+        tap.delegate = self;
         [_tableView addGestureRecognizer:tap];
     }
 
@@ -248,6 +249,15 @@
     self.messageInputView.attachmentButton.hidden = NO;
     _isUploadingAttachment = NO;
     [self updateSendButtonEnabled];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    // We prevent the gesture recognizer to begin if the
+    // keyboard is hidden in the message screen, so that
+    // underlying elements can receive touch events normally
+    // (The gesture recognizer here is the TapGestureRecognizer used
+    // to dismiss the keyboad when tapping outside of it)
+    return [self.messageInputView.textView isFirstResponder];
 }
 
 - (void)handleTapGestureRecognizer:(UITapGestureRecognizer *)tap {
